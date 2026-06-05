@@ -9,7 +9,13 @@
 		<string>audio</string>
 	</array>
 	<key>CFBundleIdentifier</key>
-	<string>com.headphoneANC.app</string>
+	<string>com.headphoneANC.HeadphoneANC</string>
+	<key>CFBundleExecutable</key>
+	<string>HeadphoneANC</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
 	<key>CFBundleName</key>
 	<string>Headphone ANC</string>
 	<key>CFBundleVersion</key>
@@ -17,7 +23,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>MinimumOSVersion</key>
-	<string>15.0</string>
+	<string>17.0</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>microphone</string>

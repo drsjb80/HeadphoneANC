@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 struct ContentView: View {
     @StateObject private var audioEngine = AudioEngineViewModel()
@@ -128,13 +129,13 @@ struct ContentView: View {
             .padding(.horizontal, 20)
             .padding(.bottom, 20)
         }
-        .background(Color(.systemBackground))
+        .background(Color.white)
     }
 }
 
 // MARK: - ViewModel
 
-class AudioEngineViewModel: NSObject, ObservableObject {
+class AudioEngineViewModel: ObservableObject {
     @Published var isEnabled = false
     @Published var selectedMode: NoiseProfile = .airplane
     @Published var gain: Float = 1.0
@@ -142,8 +143,7 @@ class AudioEngineViewModel: NSObject, ObservableObject {
 
     private var engine: AudioEngine?
 
-    override init() {
-        super.init()
+    init() {
         engine = AudioEngine()
         latencyMs = engine?.roundTripLatencyMs ?? 0
     }

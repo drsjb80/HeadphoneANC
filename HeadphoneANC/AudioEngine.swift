@@ -15,7 +15,7 @@ private let renderCallback: AURenderCallback = { (
 ) -> OSStatus in
 
     guard let engine = sharedAudioEngine else { return noErr }
-    return engine.renderCallback(ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, ioData)
+    return engine.handleAudioRender(ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, ioData)
 }
 
 class AudioEngine {
@@ -156,7 +156,7 @@ class AudioEngine {
     }
 
     // The actual real-time audio processing callback
-    fileprivate func renderCallback(
+    fileprivate func handleAudioRender(
         _ ioActionFlags: UnsafeMutablePointer<AudioUnitRenderActionFlags>,
         _ inTimeStamp: UnsafePointer<AudioTimeStamp>,
         _ inBusNumber: UInt32,

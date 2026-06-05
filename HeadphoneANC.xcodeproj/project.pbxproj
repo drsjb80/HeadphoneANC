@@ -1,0 +1,277 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AD9AEC011FD389FA00357938 /* HeadphoneANCApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD9AEC021FD389FA00357938 /* HeadphoneANCApp.swift */; };
+		AD9AEC031FD389FA00357938 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD9AEC041FD389FA00357938 /* ContentView.swift */; };
+		AD9AEC051FD389FA00357938 /* AudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD9AEC061FD389FA00357938 /* AudioEngine.swift */; };
+		AD9AEC071FD389FA00357938 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD9AEC081FD389FA00357938 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		AD9AEC002FD389FA00357938 /* HeadphoneANC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeadphoneANC.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AD9AEC021FD389FA00357938 /* HeadphoneANCApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadphoneANCApp.swift; sourceTree = "<group>"; };
+		AD9AEC041FD389FA00357938 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		AD9AEC061FD389FA00357938 /* AudioEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioEngine.swift; sourceTree = "<group>"; };
+		AD9AEC081FD389FA00357938 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AD9AECEF2FD389FA00357938 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AD9AECE92FD389FA00357938 = {
+			isa = PBXGroup;
+			children = (
+				AD9AEC091FD389FA00357938 /* HeadphoneANC */,
+				AD9AECF32FD389FA00357938 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AD9AECF32FD389FA00357938 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AD9AEC002FD389FA00357938 /* HeadphoneANC.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AD9AEC091FD389FA00357938 /* HeadphoneANC */ = {
+			isa = PBXGroup;
+			children = (
+				AD9AEC021FD389FA00357938 /* HeadphoneANCApp.swift */,
+				AD9AEC041FD389FA00357938 /* ContentView.swift */,
+				AD9AEC061FD389FA00357938 /* AudioEngine.swift */,
+				AD9AEC081FD389FA00357938 /* Assets.xcassets */,
+			);
+			path = HeadphoneANC;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AD9AECF12FD389FA00357938 /* HeadphoneANC */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AD9AECFD2FD389FD00357938 /* Build configuration list for PBXNativeTarget "HeadphoneANC" */;
+			buildPhases = (
+				AD9AECEE2FD389FA00357938 /* Sources */,
+				AD9AECEF2FD389FA00357938 /* Frameworks */,
+				AD9AECF02FD389FA00357938 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HeadphoneANC;
+			packageProductDependencies = (
+			);
+			productName = HeadphoneANC;
+			productReference = AD9AEC002FD389FA00357938 /* HeadphoneANC.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AD9AECEA2FD389FA00357938 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2650;
+				LastUpgradeCheck = 2650;
+				TargetAttributes = {
+					AD9AECF12FD389FA00357938 = {
+						CreatedOnToolsVersion = 26.5;
+					};
+				};
+			};
+			buildConfigurationList = AD9AECED2FD389FA00357938 /* Build configuration list for PBXProject "HeadphoneANC" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AD9AECE92FD389FA00357938;
+			minimizedProjectReferenceProxies = 1;
+			productRefGroup = AD9AECF32FD389FA00357938 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AD9AECF12FD389FA00357938 /* HeadphoneANC */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AD9AECF02FD389FA00357938 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AD9AEC071FD389FA00357938 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AD9AECEE2FD389FA00357938 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AD9AEC011FD389FA00357938 /* HeadphoneANCApp.swift in Sources */,
+				AD9AEC031FD389FA00357938 /* ContentView.swift in Sources */,
+				AD9AEC051FD389FA00357938 /* AudioEngine.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		AD9AECFB2FD389FD00357938 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		AD9AECFC2FD389FD00357938 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		AD9AECFE2FD389FD00357938 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.headphoneANC.HeadphoneANC;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AD9AECFF2FD389FD00357938 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.headphoneANC.HeadphoneANC;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AD9AECED2FD389FA00357938 /* Build configuration list for PBXProject "HeadphoneANC" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AD9AECFB2FD389FD00357938 /* Debug */,
+				AD9AECFC2FD389FD00357938 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AD9AECFD2FD389FD00357938 /* Build configuration list for PBXNativeTarget "HeadphoneANC" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AD9AECFE2FD389FD00357938 /* Debug */,
+				AD9AECFF2FD389FD00357938 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AD9AECEA2FD389FA00357938 /* Project object */;
+}
