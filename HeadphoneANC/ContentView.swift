@@ -5,11 +5,11 @@ struct ContentView: View {
     @StateObject private var audioEngine = AudioEngineViewModel()
 
     var body: some View {
-        VStack(spacing: 24) {
-            Text("Headphone ANC")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .padding(.top, 20)
+        ScrollView {
+            VStack(spacing: 24) {
+                Text("Headphone ANC")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
 
             // Main toggle
             Toggle("ANC Enabled", isOn: $audioEngine.isEnabled)
@@ -112,8 +112,6 @@ struct ContentView: View {
                     .padding(.horizontal, 20)
             }
 
-            Spacer()
-
             // Status indicator
             HStack(spacing: 8) {
                 Circle()
@@ -127,7 +125,10 @@ struct ContentView: View {
                 Spacer()
             }
             .padding(.horizontal, 20)
-            .padding(.bottom, 20)
+            .padding(.vertical, 20)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 8)
         }
         .background(Color.white)
     }
