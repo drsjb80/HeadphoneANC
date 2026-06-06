@@ -130,7 +130,7 @@ struct ContentView: View {
             .frame(maxWidth: .infinity)
             .padding(.vertical, 8)
         }
-        .background(Color.white)
+        .background(Color.white.ignoresSafeArea())
     }
 }
 
