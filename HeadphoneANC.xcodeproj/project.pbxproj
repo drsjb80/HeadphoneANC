@@ -10,7 +10,10 @@
 		AD9AEC011FD389FA00357938 /* HeadphoneANCApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD9AEC021FD389FA00357938 /* HeadphoneANCApp.swift */; };
 		AD9AEC031FD389FA00357938 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD9AEC041FD389FA00357938 /* ContentView.swift */; };
 		AD9AEC051FD389FA00357938 /* AudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD9AEC061FD389FA00357938 /* AudioEngine.swift */; };
+		AD9AEC0B1FD389FA00357938 /* LMSAdaptiveFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD9AEC0C1FD389FA00357938 /* LMSAdaptiveFilter.swift */; };
 		AD9AEC071FD389FA00357938 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD9AEC081FD389FA00357938 /* Assets.xcassets */; };
+		AD9AEC0D1FD389FA00357938 /* LMSAdaptiveFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD9AEC0E1FD389FA00357938 /* LMSAdaptiveFilterTests.swift */; };
+		AD9AEC0F1FD389FA00357938 /* HeadphoneANCTests.xctest */ = {isa = PBXBuildFile; fileRef = AD9AEC101FD389FA00357938 /* HeadphoneANCTests.xctest */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -18,11 +21,21 @@
 		AD9AEC021FD389FA00357938 /* HeadphoneANCApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadphoneANCApp.swift; sourceTree = "<group>"; };
 		AD9AEC041FD389FA00357938 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		AD9AEC061FD389FA00357938 /* AudioEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioEngine.swift; sourceTree = "<group>"; };
+		AD9AEC0C1FD389FA00357938 /* LMSAdaptiveFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMSAdaptiveFilter.swift; sourceTree = "<group>"; };
 		AD9AEC081FD389FA00357938 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AD9AEC0E1FD389FA00357938 /* LMSAdaptiveFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMSAdaptiveFilterTests.swift; sourceTree = "<group>"; };
+		AD9AEC101FD389FA00357938 /* HeadphoneANCTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HeadphoneANCTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		AD9AECEF2FD389FA00357938 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AD9AEC142FD389FA00357938 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -36,14 +49,24 @@
 			isa = PBXGroup;
 			children = (
 				AD9AEC091FD389FA00357938 /* HeadphoneANC */,
+				AD9AEC111FD389FA00357938 /* HeadphoneANCTests */,
 				AD9AECF32FD389FA00357938 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		AD9AEC111FD389FA00357938 /* HeadphoneANCTests */ = {
+			isa = PBXGroup;
+			children = (
+				AD9AEC0E1FD389FA00357938 /* LMSAdaptiveFilterTests.swift */,
+			);
+			path = HeadphoneANCTests;
 			sourceTree = "<group>";
 		};
 		AD9AECF32FD389FA00357938 /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				AD9AEC002FD389FA00357938 /* HeadphoneANC.app */,
+				AD9AEC101FD389FA00357938 /* HeadphoneANCTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -54,6 +77,7 @@
 				AD9AEC021FD389FA00357938 /* HeadphoneANCApp.swift */,
 				AD9AEC041FD389FA00357938 /* ContentView.swift */,
 				AD9AEC061FD389FA00357938 /* AudioEngine.swift */,
+				AD9AEC0C1FD389FA00357938 /* LMSAdaptiveFilter.swift */,
 				AD9AEC081FD389FA00357938 /* Assets.xcassets */,
 			);
 			path = HeadphoneANC;
@@ -80,6 +104,25 @@
 			productName = HeadphoneANC;
 			productReference = AD9AEC002FD389FA00357938 /* HeadphoneANC.app */;
 			productType = "com.apple.product-type.application";
+		};
+		AD9AEC121FD389FA00357938 /* HeadphoneANCTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AD9AEC1F2FD389FD00357938 /* Build configuration list for PBXNativeTarget "HeadphoneANCTests" */;
+			buildPhases = (
+				AD9AEC132FD389FA00357938 /* Sources */,
+				AD9AEC142FD389FA00357938 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AD9AEC152FD389FA00357938 /* PBXTargetDependency */,
+			);
+			name = HeadphoneANCTests;
+			packageProductDependencies = (
+			);
+			productName = HeadphoneANCTests;
+			productReference = AD9AEC101FD389FA00357938 /* HeadphoneANCTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -110,6 +153,7 @@
 			projectRoot = "";
 			targets = (
 				AD9AECF12FD389FA00357938 /* HeadphoneANC */,
+				AD9AEC121FD389FA00357938 /* HeadphoneANCTests */,
 			);
 		};
 /* End PBXProject section */
@@ -133,10 +177,37 @@
 				AD9AEC011FD389FA00357938 /* HeadphoneANCApp.swift in Sources */,
 				AD9AEC031FD389FA00357938 /* ContentView.swift in Sources */,
 				AD9AEC051FD389FA00357938 /* AudioEngine.swift in Sources */,
+				AD9AEC0B1FD389FA00357938 /* LMSAdaptiveFilter.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AD9AEC132FD389FA00357938 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AD9AEC0D1FD389FA00357938 /* LMSAdaptiveFilterTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AD9AEC152FD389FA00357938 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AD9AECF12FD389FA00357938 /* HeadphoneANC */;
+			targetProxy = AD9AEC162FD389FA00357938 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXContainerItemProxy section */
+		AD9AEC162FD389FA00357938 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AD9AECEA2FD389FA00357938 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AD9AECF12FD389FA00357938;
+			remoteInfo = HeadphoneANC;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin XCBuildConfiguration section */
 		AD9AECFB2FD389FD00357938 /* Debug */ = {
@@ -250,6 +321,40 @@
 			};
 			name = Release;
 		};
+		AD9AEC202FD389FD00357938 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = HeadphoneANCTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.headphoneANC.HeadphoneANCTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HeadphoneANC.app/HeadphoneANC";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AD9AEC212FD389FD00357938 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = HeadphoneANCTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.headphoneANC.HeadphoneANCTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HeadphoneANC.app/HeadphoneANC";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -267,6 +372,15 @@
 			buildConfigurations = (
 				AD9AECFE2FD389FD00357938 /* Debug */,
 				AD9AECFF2FD389FD00357938 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AD9AEC1F2FD389FD00357938 /* Build configuration list for PBXNativeTarget "HeadphoneANCTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AD9AEC202FD389FD00357938 /* Debug */,
+				AD9AEC212FD389FD00357938 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

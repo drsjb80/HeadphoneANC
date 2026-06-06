@@ -1,38 +1,41 @@
 import AVFoundation
 import Accelerate
 
-// Global reference to the current AudioEngine instance for the render callback
-private var sharedAudioEngine: AudioEngine?
-
-// C-style render callback that can be passed to AudioUnit
-private let renderCallback: AURenderCallback = { (
-    inRefCon: UnsafeMutableRawPointer,
-    ioActionFlags: UnsafeMutablePointer<AudioUnitRenderActionFlags>,
-    inTimeStamp: UnsafePointer<AudioTimeStamp>,
-    inBusNumber: UInt32,
-    inNumberFrames: UInt32,
-    ioData: UnsafeMutablePointer<AudioBufferList>?
-) -> OSStatus in
-
-    guard let engine = sharedAudioEngine else { return noErr }
-    return engine.handleAudioRender(ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, ioData)
-}
-
 class AudioEngine {
-    private var audioUnit: AudioUnit?
-    private var isRunning = false
+    private let audioEngine = AVAudioEngine()
+    private let musicPlayerNode = AVAudioPlayerNode()
+    private let antiNoisePlayerNode = AVAudioPlayerNode()
+    private let mixerNode = AVAudioMixerNode()
 
     // ANC parameters
     var isEnabled = false
-    var gain: Float = 1.0  // amplitude scaling for inverted signal
+    var gain: Float = 1.0
 
     // Latency tracking
     private(set) var roundTripLatencyMs: Double = 0.0
 
+    // LMS adaptive filter for ANC
+    private let lmsFilter: LMSAdaptiveFilter = LMSAdaptiveFilter(
+        filterOrder: 256,
+        learningRate: 0.00005,
+        regularization: 1e-6
+    )
+
+    // Buffers for accumulating anti-noise samples to play back
+    private var antiNoiseSampleBuffer: [Float] = []
+    private let antiNoiseBufferCapacity = 2400  // 0.05 seconds at 48kHz
+
+    private let audioFormat: AVAudioFormat
+
     init() {
-        sharedAudioEngine = self
+        // Configure audio format: 48 kHz, mono
+        guard let format = AVAudioFormat(standardFormatWithSampleRate: 48000, channels: 1) else {
+            fatalError("Failed to create audio format")
+        }
+        self.audioFormat = format
+
         configureAudioSession()
-        setupAudioUnit()
+        setupAudioEngine()
     }
 
     private func configureAudioSession() {
@@ -46,12 +49,10 @@ class AudioEngine {
             try session.setMode(.measurement)
 
             // 64-frame buffer at 48 kHz = ~1.33ms buffer latency
-            // This is the minimum iOS typically honors
             try session.setPreferredIOBufferDuration(64.0 / 48000.0)
 
             try session.setActive(true, options: .notifyOthersOnDeactivation)
 
-            // Measure actual round-trip latency
             let inputLatency = session.inputLatency
             let outputLatency = session.outputLatency
             let bufferDuration = session.ioBufferDuration
@@ -68,168 +69,117 @@ class AudioEngine {
         }
     }
 
-    private func setupAudioUnit() {
-        var audioComponentDesc = AudioComponentDescription(
-            componentType: kAudioUnitType_Output,
-            componentSubType: kAudioUnitSubType_RemoteIO,
-            componentManufacturer: kAudioUnitManufacturer_Apple,
-            componentFlags: 0,
-            componentFlagsMask: 0
-        )
+    private func setupAudioEngine() {
+        do {
+            // Attach nodes to the audio engine
+            audioEngine.attach(musicPlayerNode)
+            audioEngine.attach(antiNoisePlayerNode)
+            audioEngine.attach(mixerNode)
 
-        guard let audioComponent = AudioComponentFindNext(nil, &audioComponentDesc) else {
-            print("Failed to find RemoteIO AudioUnit")
-            return
-        }
+            // Connect nodes: both players -> mixer -> output
+            try audioEngine.connect(musicPlayerNode, to: mixerNode, format: audioFormat)
+            try audioEngine.connect(antiNoisePlayerNode, to: mixerNode, format: audioFormat)
+            try audioEngine.connect(mixerNode, to: audioEngine.mainMixerNode, format: audioFormat)
 
-        var tempAudioUnit: AudioUnit?
-        let status = AudioComponentInstanceNew(audioComponent, &tempAudioUnit)
-        guard status == noErr, let au = tempAudioUnit else {
-            print("Failed to create AudioUnit: \(status)")
-            return
-        }
+            // Tap the input node to process microphone audio through the LMS filter
+            let inputNode = audioEngine.inputNode
+            inputNode.installTap(onBus: 0, bufferSize: 4096, format: audioFormat) { [weak self] buffer, _ in
+                self?.processMicrophoneInput(buffer)
+            }
 
-        self.audioUnit = au
+            try audioEngine.start()
+            print("Audio engine started successfully")
 
-        // Enable input on bus 1 (microphone)
-        var enableInput: UInt32 = 1
-        AudioUnitSetProperty(
-            au,
-            kAudioOutputUnitProperty_EnableIO,
-            kAudioUnitScope_Input,
-            1,
-            &enableInput,
-            UInt32(MemoryLayout<UInt32>.size)
-        )
-
-        // Set up audio format: 48 kHz, mono
-        var audioFormat = AudioStreamBasicDescription(
-            mSampleRate: 48000,
-            mFormatID: kAudioFormatLinearPCM,
-            mFormatFlags: kAudioFormatFlagIsFloat | kAudioFormatFlagIsPacked,
-            mBytesPerPacket: 4,
-            mFramesPerPacket: 1,
-            mBytesPerFrame: 4,
-            mChannelsPerFrame: 1,
-            mBitsPerChannel: 32,
-            mReserved: 0
-        )
-
-        // Apply to both input and output
-        AudioUnitSetProperty(
-            au,
-            kAudioUnitProperty_StreamFormat,
-            kAudioUnitScope_Output,
-            1,  // input bus
-            &audioFormat,
-            UInt32(MemoryLayout<AudioStreamBasicDescription>.size)
-        )
-
-        AudioUnitSetProperty(
-            au,
-            kAudioUnitProperty_StreamFormat,
-            kAudioUnitScope_Input,
-            0,  // output bus
-            &audioFormat,
-            UInt32(MemoryLayout<AudioStreamBasicDescription>.size)
-        )
-
-        // Install render callback on output bus
-        var renderCallbackStruct = AURenderCallbackStruct(
-            inputProc: renderCallback,
-            inputProcRefCon: UnsafeMutableRawPointer(bitPattern: 1)
-        )
-        AudioUnitSetProperty(
-            au,
-            kAudioUnitProperty_SetRenderCallback,
-            kAudioUnitScope_Global,
-            0,
-            &renderCallbackStruct,
-            UInt32(MemoryLayout<AURenderCallbackStruct>.size)
-        )
-
-        // Initialize the audio unit
-        let initStatus = AudioUnitInitialize(au)
-        if initStatus != noErr {
-            print("Failed to initialize AudioUnit: \(initStatus)")
+        } catch {
+            print("Failed to setup audio engine: \(error)")
         }
     }
 
-    // The actual real-time audio processing callback
-    fileprivate func handleAudioRender(
-        _ ioActionFlags: UnsafeMutablePointer<AudioUnitRenderActionFlags>,
-        _ inTimeStamp: UnsafePointer<AudioTimeStamp>,
-        _ inBusNumber: UInt32,
-        _ inNumberFrames: UInt32,
-        _ ioData: UnsafeMutablePointer<AudioBufferList>?
-    ) -> OSStatus {
+    /// Process microphone input through the LMS adaptive filter.
+    /// Accumulates anti-noise samples and schedules them for playback.
+    private func processMicrophoneInput(_ buffer: AVAudioPCMBuffer) {
+        guard isEnabled, let floatData = buffer.floatChannelData?[0] else { return }
 
-        guard let ioData = ioData, isEnabled, let au = audioUnit else { return noErr }
+        // Process each microphone sample through the LMS filter
+        for i in 0..<Int(buffer.frameLength) {
+            let antiNoise = lmsFilter.processSample(floatData[i]) * gain
+            antiNoiseSampleBuffer.append(antiNoise)
 
-        // Pull audio data from the microphone input (bus 1)
-        var inputBuffer = AudioBufferList(
-            mNumberBuffers: 1,
-            mBuffers: AudioBuffer(mNumberChannels: 1, mDataByteSize: 0, mData: nil)
-        )
+            // When buffer accumulates enough samples, schedule them for playback
+            if antiNoiseSampleBuffer.count >= antiNoiseBufferCapacity {
+                scheduleAntiNoisePlayback()
+            }
+        }
+    }
 
-        var inputStatus = AudioUnitRender(
-            au,
-            ioActionFlags,
-            inTimeStamp,
-            1,  // input bus
-            inNumberFrames,
-            &inputBuffer
-        )
+    /// Schedule accumulated anti-noise samples to be played back.
+    private func scheduleAntiNoisePlayback() {
+        guard antiNoiseSampleBuffer.count > 0 else { return }
 
-        guard inputStatus == noErr, let inputData = inputBuffer.mBuffers.mData else {
-            return inputStatus
+        // Create an AVAudioPCMBuffer with the anti-noise samples
+        guard let pcmBuffer = AVAudioPCMBuffer(pcmFormat: audioFormat, frameCapacity: UInt32(antiNoiseSampleBuffer.count)) else {
+            antiNoiseSampleBuffer.removeAll()
+            return
         }
 
-        // Get the output buffer
-        let outputBuffer = UnsafeMutableAudioBufferListPointer(ioData)[0]
-        guard let outputData = outputBuffer.mData else { return noErr }
+        pcmBuffer.frameLength = UInt32(antiNoiseSampleBuffer.count)
+        let floatData = pcmBuffer.floatChannelData![0]
+        for i in 0..<antiNoiseSampleBuffer.count {
+            floatData[i] = antiNoiseSampleBuffer[i]
+        }
 
-        // Cast to float pointers for DSP
-        let input = inputData.assumingMemoryBound(to: Float.self)
-        let output = outputData.assumingMemoryBound(to: Float.self)
+        // Schedule the buffer for playback through the anti-noise player node
+        antiNoisePlayerNode.scheduleBuffer(pcmBuffer) { [weak self] in
+            // When this buffer finishes, try to schedule the next one
+            // (This keeps the player continuously fed with new samples)
+        }
 
-        // Phase inversion: multiply each sample by -gain
-        // This creates the anti-noise signal that cancels incoming noise
-        let frames = Int(inNumberFrames)
-        vDSP_vsmul(input, 1, [-gain], output, 1, vDSP_Length(frames))
+        // Start playing if not already playing
+        if !antiNoisePlayerNode.isPlaying {
+            antiNoisePlayerNode.play()
+        }
 
-        return noErr
+        antiNoiseSampleBuffer.removeAll()
     }
 
     func start() {
-        guard let au = audioUnit else { return }
-
-        let status = AudioOutputUnitStart(au)
-        if status == noErr {
-            isRunning = true
+        do {
+            // Ensure the audio engine is running
+            if !audioEngine.isRunning {
+                try audioEngine.start()
+            }
+            // Start playback nodes
+            if !musicPlayerNode.isPlaying {
+                musicPlayerNode.play()
+            }
             print("Audio engine started")
-        } else {
-            print("Failed to start audio engine: \(status)")
+        } catch {
+            print("Failed to start audio engine: \(error)")
         }
     }
 
     func stop() {
-        guard let au = audioUnit else { return }
-
-        let status = AudioOutputUnitStop(au)
-        if status == noErr {
-            isRunning = false
-            print("Audio engine stopped")
-        } else {
-            print("Failed to stop audio engine: \(status)")
-        }
+        musicPlayerNode.stop()
+        antiNoisePlayerNode.stop()
+        audioEngine.stop()
+        print("Audio engine stopped")
     }
 
     deinit {
         stop()
-        if let au = audioUnit {
-            AudioUnitUninitialize(au)
+    }
+
+    /// Load and play music or podcast audio from a file.
+    /// Use this to add music playback that will be mixed with the ANC signal.
+    func loadAudioFile(_ url: URL) {
+        do {
+            let audioFile = try AVAudioFile(forReading: url)
+            musicPlayerNode.scheduleFile(audioFile, at: nil)
+            if !musicPlayerNode.isPlaying {
+                musicPlayerNode.play()
+            }
+        } catch {
+            print("Failed to load audio file: \(error)")
         }
-        sharedAudioEngine = nil
     }
 }

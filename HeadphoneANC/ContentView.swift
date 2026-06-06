@@ -1,8 +1,10 @@
 import SwiftUI
 import Combine
+import UniformTypeIdentifiers
 
 struct ContentView: View {
     @StateObject private var audioEngine = AudioEngineViewModel()
+    @State private var isDocumentPickerPresented = false
 
     var body: some View {
         ScrollView {
@@ -112,6 +114,77 @@ struct ContentView: View {
                     .padding(.horizontal, 20)
             }
 
+            Divider()
+                .padding(.horizontal, 20)
+
+            // Audio playback
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Music & Podcasts")
+                    .font(.headline)
+                    .padding(.horizontal, 20)
+
+                if let fileName = audioEngine.loadedFileName {
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "music.note")
+                                .foregroundColor(.blue)
+                            VStack(alignment: .leading) {
+                                Text("Now Playing")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Text(fileName)
+                                    .font(.subheadline)
+                                    .lineLimit(2)
+                            }
+                            Spacer()
+                        }
+                        .padding(12)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(8)
+                    }
+                    .padding(.horizontal, 20)
+                } else {
+                    Text("No audio file loaded. Load a music or podcast file to hear it alongside the ANC signal.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .padding(.horizontal, 20)
+                }
+
+                Button(action: { isDocumentPickerPresented = true }) {
+                    HStack {
+                        Image(systemName: "folder.badge.plus")
+                        Text("Load Audio File")
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(12)
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+                }
+                .padding(.horizontal, 20)
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Where to find your music:")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.secondary)
+
+                    VStack(alignment: .leading, spacing: 6) {
+                        Label("Open Files app → On My iPhone → HeadphoneANC", systemImage: "doc.text.fill")
+                            .font(.caption2)
+                        Label("Or use iCloud Drive if synced with iTunes", systemImage: "icloud.fill")
+                            .font(.caption2)
+                        Label("AirDrop from another device", systemImage: "arrow.up.right")
+                            .font(.caption2)
+                    }
+                    .foregroundColor(.secondary)
+                    .padding(10)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(6)
+                }
+                .padding(.horizontal, 20)
+            }
+
             // Status indicator
             HStack(spacing: 8) {
                 Circle()
@@ -131,6 +204,18 @@ struct ContentView: View {
             .padding(.vertical, 8)
         }
         .background(Color.white.ignoresSafeArea())
+        .fileImporter(
+            isPresented: $isDocumentPickerPresented,
+            allowedContentTypes: [.audio],
+            onCompletion: { result in
+                switch result {
+                case .success(let url):
+                    audioEngine.loadAudioFile(url)
+                case .failure(let error):
+                    print("Failed to pick audio file: \(error)")
+                }
+            }
+        )
     }
 }
 
@@ -141,6 +226,7 @@ class AudioEngineViewModel: ObservableObject {
     @Published var selectedMode: NoiseProfile = .airplane
     @Published var gain: Float = 1.0
     @Published var latencyMs: Double = 0.0
+    @Published var loadedFileName: String?
 
     private var engine: AudioEngine?
 
@@ -165,6 +251,19 @@ class AudioEngineViewModel: ObservableObject {
     func stopANC() {
         engine?.isEnabled = false
         engine?.stop()
+    }
+
+    func loadAudioFile(_ url: URL) {
+        // Start accessing the file
+        guard url.startAccessingSecurityScopedResource() else {
+            print("Failed to access security-scoped resource")
+            return
+        }
+
+        defer { url.stopAccessingSecurityScopedResource() }
+
+        engine?.loadAudioFile(url)
+        loadedFileName = url.lastPathComponent
     }
 }
 
